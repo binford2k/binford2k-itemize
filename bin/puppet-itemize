@@ -1,0 +1,53 @@
+#!/usr/bin/env ruby
+$:.unshift File.join(File.dirname(__FILE__), '..', 'lib')
+
+require 'optparse'
+require 'puppet_x/binford2k/itemize'
+require 'puppet_x/binford2k/itemize/cli'
+
+options = {
+  :manifests => 'manifests',
+  :render    => :human,
+}
+OptionParser.new do |opts|
+  opts.banner = "Usage: puppet-inspect [options] <paths>
+
+Run this command with a space separated list of either manifest file paths, or
+directories containing manifests. If omitted, it will default to inspecting all
+manifests in the manifests directory, so you can just run this in the root of a
+Puppet module and it will do the right thing.
+
+"
+
+  opts.on('-r', '--render-as FORMAT', 'Render the output as human, json, or yaml') do |val|
+    val = val.downcase.to_sym
+    fail "Unknown output type (#{val})" unless [:human, :json, :yaml].include? val
+    options[:render] = val
+  end
+
+  opts.on('-v', '--verbose', 'Show verbose output') do
+    options[:verbose] = true
+  end
+
+  opts.on('-d', '--debug', 'Show debugging messages') do
+    options[:debug] = true
+  end
+
+  opts.on('--shell', 'Open a pry shell for debugging (must have Pry installed)') do
+    options[:shell] = true
+  end
+
+  opts.on('--version', 'Show version number') do
+    puts Puppet_X::Binford2k::Itemize::VERSION
+    exit
+  end
+
+end.parse!
+options[:manifests] = ARGV unless ARGV.empty?
+
+if options[:shell]
+  require 'pry'
+  binding.pry
+end
+
+Puppet_X::Binford2k::Itemize::Cli.new(options).render!
