@@ -59,7 +59,6 @@ $ puppet parser itemize manifests/init.pp manifests/example/path.pp
 ### Example output:
 ```
 $ puppet parser itemize ~/Projects/pltraining-classroom/manifests/
-ERROR: Parse error for /Users/ben/Projects/pltraining-classroom/files/selinux/stunnel-showoff.pp.
 Itemizing [===========================================]
 Resource usage analysis:
 ==========================================================
