@@ -161,9 +161,8 @@ Resource usage analysis:
 ## Limitations
 
 This is super early in development and has not yet been battle tested. It does
-not yet understand defined types, nor how to resolve dynamically declared
-classes (where the class names are concatenated strings). This is next on the
-roadmap to fix.
+not yet understand how to resolve dynamically declared classes (where the class
+names are concatenated strings). This is next on the roadmap to fix.
 
 
 ## Disclaimer
