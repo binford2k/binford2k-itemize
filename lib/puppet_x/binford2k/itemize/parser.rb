@@ -1,5 +1,6 @@
 require 'puppet'
 require 'puppet/parser'
+require 'puppet/util/logging'
 
 class Puppet_X::Binford2k::Itemize::Parser
   attr_reader :results
@@ -12,9 +13,8 @@ class Puppet_X::Binford2k::Itemize::Parser
       :types     => {},
       :classes   => {},
       :functions => {},
-      :errors    => [],
-      :warnings  => [],
     }
+    Puppet::Util::Log.newdestination(:console)
   end
 
   def record(kind, thing)
@@ -32,14 +32,14 @@ class Puppet_X::Binford2k::Itemize::Parser
       result = parser.parse_string(source, @filename)
       compute(result)
     rescue => e
-      @results[:errors] << "Parse error for #{@filename}."
-      @results[:errors] << e.message
-      @results[:errors].concat e.backtrace if @options[:debug]
+      Puppet.err "Parse error for #{@filename}."
+      Puppet.err e.message
+      Puppet.debug e.backtrace.join "\n"
     end
     self
   end
 
-  # Computes abc score (1 per assignment)
+  # Start walking the tree and count each tracked token
   def compute(target)
     @path = []
     count(target)
@@ -76,11 +76,19 @@ class Puppet_X::Binford2k::Itemize::Parser
     case function_name
     when 'include'
       o.arguments.each do |klass|
-        record(:classes, klass.value)
+        case klass
+        when Puppet::Pops::Model::ConcatenatedString
+          # Because this is pre-compilation, we cannot resolve variables. So just tag w/ a marker
+          # TODO: This should go somewhere else, but I'm not entirely sure where just now.
+          record(:classes, klass.segments.map {|t| t.value rescue nil }.join('<??>'))
+        else
+          record(:classes, klass.value)
+        end
       end
 
     when 'create_resources'
-      @results[:warnings] << 'create_resources detected. Please update to use iteration instead.'
+      Puppet.warning 'create_resources detected. Please update to use iteration instead.'
+      record(:functions, function_name)
       record(:types, o.arguments.first.value)
 
     else

@@ -15,9 +15,7 @@ Install as either a gem:
 $ gem install puppet-itemize
 ```
 
-Or as a Puppet module. Note that the module has a few gem dependencies. Enforce
-the `puppet_itemize::dependencies` class on each machine you plan to run this
-tool on.
+Or as a Puppet module:
 
 ```
 $ puppet module install binford2k/puppet_itemize
@@ -50,119 +48,137 @@ $ puppet-itemize manifests/init.pp manifests/example/path.pp
 Available only when installed via Puppet module.
 
 ```
-$ puppet parser itemize"
-$ puppet parser itemize manifests"
+$ puppet parser itemize
+$ puppet parser itemize manifests
 $ puppet parser itemize manifests/init.pp
 $ puppet parser itemize manifests/init.pp manifests/example/path.pp
 ```
 
 ### Example output:
+
+Because this is static analysis prior to compilation, no variables can be
+resolved.  Because of that, when a class name is calculated dynamically, any
+variable parts of the name will be represented as `<??>`. See an example of that
+below in the class list as `apache::mod::<??>`.
+
 ```
-$ puppet parser itemize ~/Projects/pltraining-classroom/manifests/
-Itemizing [===========================================]
+$ puppet parser itemize ~/Projects/puppetlabs-apache/manifests/
+Warning: create_resources detected. Please update to use iteration instead.
 Resource usage analysis:
-==============================================================
- types:
-                                                    file   35
-                                                 package   19
-                                             windows_env    2
-                                                    exec   21
-                                                 dirtree    1
-                                                    host    1
-                                                  augeas    1
-                                       dockeragent::node    2
-                  puppet_enterprise::mcollective::client    2
-                                        pe_hocon_setting    2
-                                               rbac_user    1
-                                           docker::image    2
-                                             docker::run    1
-                                             ini_setting    5
-                                                 service    1
-                                                    cron    1
-                                                 vcsrepo    1
-                                               hash_file    1
-                                   showoff::presentation    1
-                                                  notify    2
-                                            stunnel::tun    1
-                                               selmodule    1
-                                                    user    2
-                                                 yumrepo    1
-                                                  reboot    2
-                                      dsc_windowsfeature    1
-                                           dsc_xaddomain    1
-                                            dsc_xadgroup    1
-                                             dsc_xaduser    1
-                                                 archive    1
-                                               fileshare    1
-                                                     acl    1
-                                         registry::value    2
-                                          registry_value    2
-                                       chocolateyfeature    1
-                          classroom::windows::dns_server    1
- classes:
-                                                     git    1
-                                                  docker    2
-                                             dockeragent    1
-                     classroom_legacy::course::architect    1
-                  classroom_legacy::course::fundamentals    1
-                  classroom_legacy::course::practitioner    1
-                                      classroom::virtual    9
-                                        classroom::facts    7
-                              classroom::master::showoff    9
-                      classroom::master::reporting_tools    2
-                                classroom::master::hiera    1
-                                   classroom::agent::git    1
-                                 classroom::agent::hosts    1
-                                      classroom::windows    3
-                                                 stunnel    1
-               classroom_legacy::master::showoff::legacy    1
-                                                 showoff    1
-               classroom::master::dependencies::rubygems    1
-              classroom::master::dependencies::dashboard    1
-                               classroom::master::tuning    1
-                             classroom::master::deployer    1
-                         classroom::master::perf_logging    1
-                                classroom::master::gitea    1
-                                           puppetfactory    1
-                          classroom::master::codemanager    1
-                                        classroom::proxy    1
-                                 classroom::agent::hiera    1
-                              classroom::agent::packages    1
-                              classroom::agent::rubygems    1
-                          classroom::agent::postfix_ipv4    1
-                                        classroom::gemrc    1
-                                classroom::agent::augeas    1
-                            classroom::windows::geotrust    1
-                     classroom::windows::password_policy    1
-                         classroom::windows::disable_esc    1
-                               classroom::windows::alias    1
-                          classroom::windows::enable_rdp    1
-                                          userprefs::npp    1
-                            classroom::windows::adserver    1
- functions:
-                                          assert_private   19
-                                                 require    5
-                                                   chomp    2
-                                                    file    2
-                                                 flatten    1
-                                                template    2
-                                                     epp    4
-                                                 defined    1
-                                              versioncmp    4
-                                                    fail    7
-                                                    pick    6
-                                                regsubst    3
-                                          is_domain_name    1
-                                                   split    1
-                                                     dig    1
-                                                  string    1
+=======================================
+>> types:
+                          concat |   3
+                concat::fragment |  49
+                            file |  81
+                            exec |   8
+                     apache::mod | 134
+      apache::default_mods::load |   1
+                         package |  11
+                            user |   1
+                           group |   1
+               portage::makeconf |   8
+                   apache::vhost |   3
+                          anchor |   1
+                     apache::mpm |   8
+                       file_line |   3
+                         yumrepo |   1
+    apache::peruser::multiplexer |   1
+     apache::security::rule_link |   1
+                         service |   1
+           apache::custom_config |   1
+
+>> classes:
+     apache::mod::proxy_balancer |   1
+          apache::confd::no_accf |   1
+               apache::mod::<??> |   2
+         apache::mod::authn_core |   4
+         apache::mod::reqtimeout |   2
+            apache::mod::actions |   2
+              apache::mod::cache |   2
+         apache::mod::ext_filter |   1
+               apache::mod::mime |   6
+         apache::mod::mime_magic |   2
+            apache::mod::rewrite |   3
+            apache::mod::speling |   2
+             apache::mod::suexec |   2
+            apache::mod::version |   2
+        apache::mod::vhost_alias |   3
+         apache::mod::disk_cache |   1
+            apache::mod::headers |   2
+               apache::mod::info |   1
+            apache::mod::userdir |   1
+             apache::mod::filter |   5
+                apache::mod::cgi |   1
+               apache::mod::cgid |   1
+              apache::mod::alias |   2
+         apache::mod::authn_file |   1
+          apache::mod::autoindex |   1
+                apache::mod::dav |   2
+             apache::mod::dav_fs |   1
+            apache::mod::deflate |   1
+                apache::mod::dir |   2
+        apache::mod::negotiation |   1
+           apache::mod::setenvif |   2
+      apache::mod::authz_default |   1
+         apache::mod::authz_user |   1
+            apache::mod::fastcgi |   2
+                 apache::service |   1
+            apache::default_mods |   2
+     apache::default_confd_files |   1
+                          apache |  39
+                apache::mod::dbd |   1
+               apache::mod::ldap |   1
+                     apache::dev |   1
+            apache::mod::prefork |   1
+              apache::mod::proxy |   4
+         apache::mod::proxy_http |   2
+                  apache::params |   2
+      apache::mod::socache_shmcb |   1
+                 apache::package |   1
+                apache::mod::php |   1
+             apache::mod::python |   1
+                apache::mod::ssl |   2
+          apache::mod::auth_kerb |   1
+               apache::mod::wsgi |   1
+          apache::mod::passenger |   3
+
+>> functions:
+                      versioncmp |  47
+                 ensure_resource |   3
+                 inline_template |   2
+                        template |  94
+                            fail |  58
+                     validate_re |  20
+                   validate_bool |  23
+                        regsubst |   6
+                         defined |  55
+                is_absolute_path |   1
+       validate_apache_log_level |   2
+                         warning |  16
+                        is_array |   9
+                          concat |   2
+          validate_absolute_path |   2
+                            pick |  11
+                 validate_string |   4
+                  validate_array |   4
+                        downcase |   4
+                   validate_hash |   7
+                       is_string |   2
+                         has_key |   4
+                         is_bool |   1
+                           split |   2
+                           empty |  20
+                    enclose_ipv6 |   1
+                          suffix |   2
+                       any2array |   2
+                         is_hash |   5
+                           merge |   1
+                create_resources |   1
 ```
 
 ## Limitations
 
-This is super early in development and has not yet been battle tested. It does
-not yet understand how to resolve dynamically declared classes (where the class
-names are concatenated strings). This is next on the roadmap to fix.
+This is super early in development and has not yet been battle tested.
 
 
 ## Disclaimer

@@ -48,6 +48,7 @@ options[:manifests] = ARGV unless ARGV.empty?
 if options[:shell]
   require 'pry'
   binding.pry
+  exit 0
 end
 
 Puppet_X::Binford2k::Itemize::Cli.new(options).render!

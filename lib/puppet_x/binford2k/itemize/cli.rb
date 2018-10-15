@@ -25,19 +25,26 @@ class Puppet_X::Binford2k::Itemize::Cli
   end
 
   def to_s
-    require 'tty-table'
-    table = TTY::Table.new
+    name_width  = 2
+    count_width = 2
     @results.each do |kind, counts|
-      table << ["#{kind}:", nil, nil]
-
       counts.each do |name, count|
-        table << ['', {value: name, alignment: :right}, {value: count, alignment: :right}]
+        name_width  = [name_width, name.size].max
+        count_width = [count_width, count.to_s.size].max
       end
     end
+
     output  = "Resource usage analysis:\n"
-    output += '=' * (table.width + 8)
-    output += "\n"
-    output += table.render padding: [0,1]
+    output << '=' * (name_width + count_width + 8)
+    output << "\n"
+    @results.each do |kind, counts|
+      output << ">> #{kind}:\n"
+
+      counts.each do |name, count|
+        output << sprintf("    %#{name_width}s | %#{count_width}s\n", name, count)
+      end
+      output << "\n"
+    end
     output
   end
 

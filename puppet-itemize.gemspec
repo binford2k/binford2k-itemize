@@ -18,8 +18,6 @@ Gem::Specification.new do |s|
   s.files            += Dir.glob("lib/**/*")
   s.files            += Dir.glob("bin/**/*")
   s.add_dependency      "json"
-  s.add_dependency      "tty-table"
-  s.add_dependency      "tty-progressbar"
 
   s.description       = <<-desc
   Run this command with a space separated list of either manifest file paths, or

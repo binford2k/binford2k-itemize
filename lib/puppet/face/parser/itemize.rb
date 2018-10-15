@@ -34,6 +34,7 @@ Puppet module and it will do the right thing.
       if options[:shell]
         require 'pry'
         binding.pry
+        exit 0
       end
 
       Puppet_X::Binford2k::Itemize::Cli.new(options).run!
@@ -44,32 +45,5 @@ Puppet module and it will do the right thing.
     end
 
   end
-
-#   def dump(o)
-#     format(do_dump(o))
-#   end
-#
-#   def main
-#     Puppet::Util::Log.newdestination(:console)
-#     set_log_level
-#
-#     while (filename = command_line.args.shift)
-#       raise "Could not find script file #{filename}" unless Puppet::FileSystem.exist?(filename)
-#
-#       source       = Puppet::FileSystem.read(filename)
-#       parse_result = evaluating_parser.parse_string(source, filename)
-#       dump_visitor = Puppet::Pops::Visitor.new(nil,"dump",0,0)
-#       dump_visitor.visit_this_0(self, parse_result)
-#
-#       require 'pry'
-#       binding.pry
-#
-#       validation_environment = Puppet::Node::Environment.create(:production, [])
-#       validation_environment.check_for_reparse
-#       validation_environment.known_resource_types.clear
-#
-#     end
-#
-#   end
 
 end
