@@ -18,7 +18,7 @@ $ gem install puppet-itemize
 Or as a Puppet module:
 
 ```
-$ puppet module install binford2k/puppet_itemize
+$ puppet module install binford2k/itemize
 ```
 
 ## Usage
