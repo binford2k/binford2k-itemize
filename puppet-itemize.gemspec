@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.summary           = "Count the number of types, classes, functions used in Puppet manifest(s)."
   s.license           = 'Apache-2.0'
   s.email             = "ben.ford@puppet.com"
-  s.homepage          = "https://github.com/binford2k/puppet-itemize"
+  s.homepage          = "https://github.com/binford2k/binford2k-itemize"
   s.authors           = ["Ben Ford"]
   s.has_rdoc          = false
   s.require_path      = "lib"
