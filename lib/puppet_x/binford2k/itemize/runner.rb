@@ -1,9 +1,24 @@
+require 'json'
+
 class Puppet_X::Binford2k::Itemize::Runner
   attr_reader :results
   def initialize(options = {})
-    @paths   = expand(Array(options[:manifests]))
-    @options = options
-    @results = {}
+    @paths     = expand(Array(options[:manifests]))
+    @options   = options
+    @results   = {}
+
+    if options[:external] and options[:manifests].size == 1
+      path = options[:manifests].first.chomp('/')
+      if path.end_with? 'manifests'
+        metadata   = JSON.parse(File.read(File.expand_path("#{path}/../metadata.json")))
+        author     = metadata['author']
+        @namespace = metadata['name'].sub(/^#{author}-/, '') + '::'
+
+        @dependencies = metadata['dependencies'].map do |dep|
+          dep['name'].split(/-\//).last
+        end
+      end
+    end
   end
 
   def expand(paths)
@@ -27,6 +42,8 @@ class Puppet_X::Binford2k::Itemize::Runner
         @results[kind] ||= {}
 
         counts.each do |name, count|
+          next if @namespace and name =~ /^#{@namespace}/
+
           @results[kind][name] ||= 0
           @results[kind][name]  += count
         end

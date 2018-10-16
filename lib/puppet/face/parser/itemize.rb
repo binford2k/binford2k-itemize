@@ -14,6 +14,10 @@ manifests in the manifests directory, so you can just run this in the root of a
 Puppet module and it will do the right thing.
     EOT
 
+    option('--external') do
+      summary 'Show external elements only.'
+    end
+
     option('--shell') do
       summary 'Start a debugging shell (requires Pry).'
     end

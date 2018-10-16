@@ -17,6 +17,10 @@ directories containing manifests. If omitted, it will default to inspecting all
 manifests in the manifests directory, so you can just run this in the root of a
 Puppet module and it will do the right thing.
 
+If this is run from the root of a Puppet module or the `manifests` directory of
+a Puppet module, and the `--external` argument is passed, then it will only
+output elements that come from other modules (or are global).
+
 "
 
   opts.on('-r', '--render-as FORMAT', 'Render the output as human, json, or yaml') do |val|
@@ -30,6 +34,10 @@ Puppet module and it will do the right thing.
   end
 
   opts.on('-d', '--debug', 'Show debugging messages') do
+    options[:debug] = true
+  end
+
+  opts.on('-x', '--external', 'Show external elements only') do
     options[:debug] = true
   end
 
