@@ -14,7 +14,6 @@ class Puppet_X::Binford2k::Itemize::Parser
       :classes   => {},
       :functions => {},
     }
-    Puppet::Util::Log.newdestination(:console)
   end
 
   def record(kind, thing)
