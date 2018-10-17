@@ -1,6 +1,6 @@
 {
   "name": "binford2k-itemize",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": "binford2k",
   "summary": "Count the number of types, classes, functions used in Puppet manifest(s).",
   "license": "Apache-2.0",

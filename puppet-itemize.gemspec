@@ -11,13 +11,12 @@ Gem::Specification.new do |s|
   s.email             = "ben.ford@puppet.com"
   s.homepage          = "https://github.com/binford2k/binford2k-itemize"
   s.authors           = ["Ben Ford"]
-  s.has_rdoc          = false
   s.require_path      = "lib"
   s.executables       = %w( puppet-itemize )
   s.files             = %w( CHANGELOG.md README.md LICENSE )
   s.files            += Dir.glob("lib/**/*")
   s.files            += Dir.glob("bin/**/*")
-  s.add_dependency      "puppet"
+  s.add_dependency      "puppet", [">= 4.10", "< 7.0"]
 
   s.description       = <<-desc
   Run this command with a space separated list of either manifest file paths, or
