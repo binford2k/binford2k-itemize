@@ -54,6 +54,34 @@ $ puppet parser itemize manifests/init.pp
 $ puppet parser itemize manifests/init.pp manifests/example/path.pp
 ```
 
+### Module dependency validation
+
+If the tool can identify that you're running this on manifests within a Puppet
+module, then it will validate the dependencies listed in the `metadata.json`.
+By default, it will print out warnings for resources or classes that come from
+modules that aren't declared as dependencies. Facts and Puppet 3.x style functions
+aren't namespaced in the same way, so they cannot be identified, but Puppet 4.x
+namespaced functions will trigger the same validation.
+
+You can also use the `--external` argument. This will filter the output to only
+show elements which are either global or from other modules. This can be used to
+help identify how dependencies are being used.
+
+
+### Programatic use
+
+You can choose to render the output in either JSON or YAML for consumption by
+other tools or testing pipelines by simply passing the `--render-as` argument:
+
+```
+$ puppet parser itemize ~/Projects/puppetlabs-apache/manifests/ --render-as json
+$ puppet parser itemize ~/Projects/puppetlabs-apache/manifests/ --render-as yaml
+```
+
+It's also reasonably easy to invoke this as a library from Ruby tools. See the
+`bin/puppet-itemize` script for an example.
+
+
 ### Example output:
 
 Because this is static analysis prior to compilation, no variables can be
@@ -63,6 +91,12 @@ below in the class list as `apache::mod::<??>`.
 
 ```
 $ puppet parser itemize ~/Projects/puppetlabs-apache/manifests/
+Warning: Undeclared module dependancy: portage::makeconf
+Warning: Undeclared module dependancy: portage::makeconf
+Warning: Undeclared module dependancy: portage::makeconf
+Warning: Undeclared module dependancy: portage::makeconf
+Warning: Undeclared module dependancy: portage::makeconf
+Warning: Undeclared module dependancy: portage::makeconf
 Warning: create_resources detected. Please update to use iteration instead.
 Resource usage analysis:
 =======================================
@@ -176,6 +210,7 @@ Resource usage analysis:
                 create_resources |   1
 ```
 
+
 ## Limitations
 
 This is super early in development and has not yet been battle tested.
@@ -184,6 +219,7 @@ This is super early in development and has not yet been battle tested.
 ## Disclaimer
 
 I take no liability for the use of this tool.
+
 
 Contact
 -------
