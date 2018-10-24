@@ -1,6 +1,7 @@
 require 'puppet'
 require 'puppet/parser'
 require 'puppet/util/logging'
+require 'puppet_x/binford2k/itemize/monkeypatch'
 
 class Puppet_X::Binford2k::Itemize::Parser
   attr_reader :results
@@ -75,14 +76,7 @@ class Puppet_X::Binford2k::Itemize::Parser
     case function_name
     when 'include'
       o.arguments.each do |klass|
-        case klass
-        when Puppet::Pops::Model::ConcatenatedString
-          # Because this is pre-compilation, we cannot resolve variables. So just tag w/ a marker
-          # TODO: This should go somewhere else, but I'm not entirely sure where just now.
-          record(:classes, klass.segments.map {|t| t.value rescue nil }.join('<??>'))
-        else
-          record(:classes, klass.value)
-        end
+        record(:classes, klass.value)
       end
 
     when 'create_resources'
