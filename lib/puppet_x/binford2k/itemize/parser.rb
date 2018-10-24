@@ -80,7 +80,7 @@ class Puppet_X::Binford2k::Itemize::Parser
       end
 
     when 'create_resources'
-      Puppet.warning 'create_resources detected. Please update to use iteration instead.'
+      Puppet.warn_once(:dependency, 'create_resources', 'create_resources detected. Please update to use iteration instead.', :default, :default)
       record(:functions, function_name)
       record(:types, o.arguments.first.value)
 

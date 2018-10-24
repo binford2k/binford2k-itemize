@@ -57,7 +57,7 @@ class Puppet_X::Binford2k::Itemize::Runner
         counts.each do |name, count|
           segments = name.split('::')
           if @dependencies and segments.size > 1
-            Puppet.warning "Undeclared module dependancy: #{name}" unless @dependencies.include? segments.first
+            Puppet.warn_once(:dependency, name, "Undeclared module dependancy: #{name}", :default, :default) unless @dependencies.include? segments.first
           end
           next if @options[:external] and segments.first == @namespace
 
