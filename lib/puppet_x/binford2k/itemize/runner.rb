@@ -50,6 +50,7 @@ class Puppet_X::Binford2k::Itemize::Runner
 
   def run!
     @paths.each do |path|
+      Puppet.debug "Itemizing #{path}"
       parser = Puppet_X::Binford2k::Itemize::Parser.new(path, @options).parse!
       parser.results.each do |kind, counts|
         @results[kind] ||= {}
