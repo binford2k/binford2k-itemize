@@ -92,11 +92,6 @@ below in the class list as `apache::mod::<??>`.
 ```
 $ puppet parser itemize ~/Projects/puppetlabs-apache/manifests/
 Warning: Undeclared module dependancy: portage::makeconf
-Warning: Undeclared module dependancy: portage::makeconf
-Warning: Undeclared module dependancy: portage::makeconf
-Warning: Undeclared module dependancy: portage::makeconf
-Warning: Undeclared module dependancy: portage::makeconf
-Warning: Undeclared module dependancy: portage::makeconf
 Warning: create_resources detected. Please update to use iteration instead.
 Resource usage analysis:
 =======================================
