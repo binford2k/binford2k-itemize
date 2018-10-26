@@ -64,7 +64,14 @@ class Puppet_X::Binford2k::Itemize::Parser
       # for classes declared as resource-style, we have to traverse back up the
       # tree to see if this resource body was declared by a class resource.
       o.bodies.each do |klass|
-        record(:classes, klass.title.value)
+        case klass.title
+        when Puppet::Pops::Model::LiteralList
+          klass.title.values.each do |item|
+            record(:classes, item.value)
+          end
+        else
+          record(:classes, klass.title.value)
+        end
       end
     else
       record(:types, resource_name)
