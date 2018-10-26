@@ -18,8 +18,7 @@ class Puppet_X::Binford2k::Itemize::Runner
 
       if path
         @metadata  = JSON.parse(File.read(File.expand_path("#{path}/../metadata.json")))
-        author     = @metadata['author']
-        @namespace = @metadata['name'].sub(/^#{author}-/, '')
+        @namespace = @metadata['name'].split(/[-\/]/).last
 
         # we can only use the module name part of this, not the user namespace
         @dependencies = @metadata['dependencies'].map do |dep|
