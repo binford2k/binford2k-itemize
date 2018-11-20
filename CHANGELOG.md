@@ -1,3 +1,10 @@
+# v0.0.4
+
+* Stop monkeypatching core classes
+* Catch both prefix and postfix function forms
+* Count `require` and `contain` functions properly
+
+
 # v0.0.3
 
 * Parse more syntax edge cases without exploding. We can't evaluate everything
