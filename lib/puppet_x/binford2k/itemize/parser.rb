@@ -1,7 +1,7 @@
 require 'puppet'
 require 'puppet/parser'
 require 'puppet/util/logging'
-require 'puppet_x/binford2k/itemize/monkeypatch'
+# require 'puppet_x/binford2k/itemize/monkeypatch'
 
 class Puppet_X::Binford2k::Itemize::Parser
   attr_reader :results
@@ -58,7 +58,7 @@ class Puppet_X::Binford2k::Itemize::Parser
   end
 
   def count_ResourceExpression(o)
-    resource_name = o.type_name.value
+    resource_name = value_of(o.type_name)
     case resource_name
     when 'class'
       # for classes declared as resource-style, we have to traverse back up the
@@ -67,10 +67,10 @@ class Puppet_X::Binford2k::Itemize::Parser
         case klass.title
         when Puppet::Pops::Model::LiteralList
           klass.title.values.each do |item|
-            record(:classes, item.value)
+            record(:classes, value_of(item))
           end
         else
-          record(:classes, klass.title.value)
+          record(:classes, value_of(klass.title))
         end
       end
     else
@@ -78,21 +78,51 @@ class Puppet_X::Binford2k::Itemize::Parser
     end
   end
 
+  # postfix functions
+  def count_CallMethodExpression(o)
+    record_function(o, o.functor_expr.right_expr.value)
+  end
+
+  # prefix functions
   def count_CallNamedFunctionExpression(o)
-    function_name = o.functor_expr.value
+    record_function(o, o.functor_expr.value)
+  end
+
+  def record_function(o, function_name)
     case function_name
-    when 'include'
+    when 'include', 'contain', 'require'
       o.arguments.each do |klass|
-        record(:classes, klass.value)
+        record(:classes, value_of(klass))
       end
 
     when 'create_resources'
       Puppet.warn_once(:dependency, 'create_resources', 'create_resources detected. Please update to use iteration instead.', :default, :default)
       record(:functions, function_name)
-      record(:types, o.arguments.first.value)
+      record(:types, value_of(o.arguments.first))
 
     else
       record(:functions, function_name)
+    end
+  end
+
+  def value_of(obj)
+    case obj
+    when Puppet::Pops::Model::ConcatenatedString
+      obj.segments.map {|t| t.value rescue nil }.join('<??>')
+    when Puppet::Pops::Model::VariableExpression,
+         Puppet::Pops::Model::CallMethodExpression,
+         Puppet::Pops::Model::LiteralDefault
+      '<??>'
+    when Puppet::Pops::Model::CallMethodExpression
+      obj.functor_expr.right_expr.value
+    when Puppet::Pops::Model::AccessExpression
+      obj.keys.map {|t| t.value rescue nil }.join
+    when Puppet::Pops::Model::ArithmeticExpression
+      obj.left_expr.value + obj.operator + obj.right_expr.value
+    when Puppet::Pops::Model::CallNamedFunctionExpression
+      "#{obj.functor_expr.value}(#{obj.arguments.map {|a| a.value rescue nil }.join(',')})"
+    else
+      obj.value
     end
   end
 
