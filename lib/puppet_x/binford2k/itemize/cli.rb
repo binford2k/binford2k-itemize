@@ -44,6 +44,11 @@ class Puppet_X::Binford2k::Itemize::Cli
         output << sprintf("    %#{name_width}s | %#{count_width}s\n", name, count)
       end
       output << "\n"
+
+      instances = counts.reduce(0) { |acc, c| acc + c[1] }
+
+      output << sprintf("    %#{name_width}s | %#{count_width}s\n", "Totals: #{counts.count}", instances)
+      output << "\n"
     end
     output
   end
