@@ -40,7 +40,19 @@ class Puppet_X::Binford2k::Itemize::Cli
     @results.each do |kind, counts|
       output << ">> #{kind}:\n"
 
-      counts.each do |name, count|
+      counts.sort do |a, b|
+        a_name, a_count = *a
+        b_name, b_count = *b
+
+        # Sort results by count, sort equal counts alphabetically
+        if a_count == b_count
+          # item counts are equal, sort by result name
+          a_name <=> b_name
+        else
+          # item counts are unequal, reverse sort by result count
+          b_count <=> a_count
+        end
+      end.each do |name, count|
         output << sprintf("    %#{name_width}s | %#{count_width}s\n", name, count)
       end
       output << "\n"
