@@ -10,7 +10,7 @@ options = {
   :render    => :human,
 }
 OptionParser.new do |opts|
-  opts.banner = "Usage: puppet-inspect [options] <paths>
+  opts.banner = "Usage: #{File.basename($PROGRAM_NAME)} [options] <paths>
 
 Run this command with a space separated list of either manifest file paths, or
 directories containing manifests. If omitted, it will default to inspecting all
